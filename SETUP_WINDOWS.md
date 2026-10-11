@@ -70,3 +70,19 @@ Copy the two contract addresses into `README.md` → *Deployed contracts*.
 ## If something fails
 
 Copy the full error message and send it to Claude — most first-time problems are a missing `.env` value or no test ETH.
+
+## 7. AI layer and dashboard (Python)
+
+In the PyCharm terminal, inside the `verikarbon` folder:
+
+```
+pip install -r ai/requirements.txt
+python ai/simulate.py
+python ai/build_passport.py
+npx hardhat run scripts/anchor.js --network sepolia
+python -m streamlit run ai/app.py
+```
+
+- `build_passport.py` prints the detection results and writes `ai/out/`.
+- `anchor.js` puts the AI-checked passport on Sepolia (needs `deployments/sepolia.json` from step 5).
+- `streamlit run` opens the dashboard in your browser. Stop it with **Ctrl+C**.

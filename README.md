@@ -4,7 +4,7 @@
 
 Track: **Carbon Markets & Emissions Transparency** — IEEE ClimateChain Global Hackathon 2026
 
-> Status: work in progress (smart-contract core complete and tested; AI layer and dashboard in progress).
+> Status: smart-contract core deployed on Sepolia; AI integrity layer and dashboard complete.
 
 ## The problem
 
@@ -29,6 +29,25 @@ The parties involved (exporter, accredited verifier, EU importer, national regis
 
 All plant data in this prototype is **synthetic and labelled as such**.
 
+## AI integrity layer (`ai/`)
+
+Before anything goes on-chain, VeriKarbon checks the plant's hourly monitoring data:
+
+| Layer | What it catches |
+|---|---|
+| **EAF physics rules** | electricity per tonne, metallic yield, electrode and fuel intensity outside physical limits; frozen meters |
+| **Isolation Forest** (unsupervised) | subtle manipulations that stay inside each single limit, e.g. 10–30% electricity under-reporting |
+
+On 2,880 hours of **synthetic** EAF + rolling-mill data with 158 injected manipulations (labels used only for scoring):
+
+- **97% of manipulated hours caught, 88% precision**: the ML layer alone found 18 of 31 electricity under-reports that the physics rules missed
+- the verifier reviews **6% of hours** (the flagged list) instead of all of them
+- **~376 tCO2e of hidden emissions** surfaced in flagged hours
+
+The output becomes the passport: a keccak Merkle root of every hourly record (`evidenceRoot`) and the hash of the integrity report the verifier signed off (`attestationHash`). Change one record and the root no longer matches.
+
+Reference values are sourced in `ai/config.py` (Türkiye grid factor 0.442 tCO2/MWh, ETKB 2022; IPCC fuel factors; published EAF ranges; CBAM default 2.31 tCO2e/t for Turkish bars and rods + 10% mark-up in 2026).
+
 ## Run it
 
 ```bash
@@ -36,6 +55,14 @@ npm install
 npx hardhat test                                    # 11 tests
 npx hardhat run scripts/deploy.js --network sepolia
 npx hardhat run scripts/demo.js   --network sepolia
+```
+
+```bash
+pip install -r ai/requirements.txt
+python ai/simulate.py                               # synthetic plant data
+python ai/build_passport.py                         # AI integrity check -> passport payload
+npx hardhat run scripts/anchor.js --network sepolia # put the AI-checked passport on-chain
+python -m streamlit run ai/app.py                   # dashboard
 ```
 
 See `SETUP_WINDOWS.md` for a step-by-step guide.
@@ -57,6 +84,13 @@ See `SETUP_WINDOWS.md` for a step-by-step guide.
 | Registry records TR-ETS carbon price paid (2,000 tCO2e) | [tx](https://sepolia.etherscan.io/tx/0xd5de91806ad94c2883ba194f286787a6ac8b2ffed841f6219833a28edc790847) |
 | Importer deducts 2,000 tCO2e of carbon price paid | [tx](https://sepolia.etherscan.io/tx/0x38fa88a29dfc90a35b1fb7b026f359a73832c8db65a3b590b23c99b843d95d7e) |
 | **Second deduction of the same payment → rejected on-chain** | [tx (failed)](https://sepolia.etherscan.io/tx/0x7839fe23b0613e4877cfe5fa02d083a8022d5885834c719aff946b24b3824a5b) |
+
+### AI-checked passport (#3, 280,768 t rebar, 395 kgCO2e/t)
+
+| Step | Transaction |
+|---|---|
+| Passport created from AI-checked monitoring data (evidence root `0x45dd7ff9…`) | [tx](https://sepolia.etherscan.io/tx/0x86b0d4f418d551e31c504f58e8bd06d392bc53d2f92e9bc8f96ee8df810ee0af) |
+| Verified; attestation = hash of the integrity report | [tx](https://sepolia.etherscan.io/tx/0xe6382edc715b04153043434c3acbcc48e1445a1ea40bccdb5911e064970c70e7) |
 
 ## License
 
