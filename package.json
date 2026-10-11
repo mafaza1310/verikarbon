@@ -1,0 +1,20 @@
+{
+  "name": "verikarbon",
+  "version": "1.0.0",
+  "description": "Embedded-emissions passports and once-only carbon-price deductions for CBAM exporters (IEEE ClimateChain 2026)",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "demo:sepolia": "hardhat run scripts/demo.js --network sepolia"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.6.1",
+    "dotenv": "^18.0.6",
+    "hardhat": "^2.29.1"
+  }
+}
