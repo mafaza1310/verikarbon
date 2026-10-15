@@ -3,6 +3,7 @@
 **Tamper-evident embedded-emissions passports and once-only carbon-price deductions for CBAM exporters.**
 
 Track: **Carbon Markets & Emissions Transparency** — IEEE ClimateChain Global Hackathon 2026
+**Live dashboard:** https://verikarbon.streamlit.app  ·  **Video:** (link coming)
 
 > Status: smart-contract core deployed on Sepolia; AI integrity layer and dashboard complete.
 
@@ -22,8 +23,8 @@ The parties involved (exporter, accredited verifier, EU importer, national regis
 ## Architecture (planned full system)
 
 1. **Signed data at source** — meter/fuel/precursor data, hashed into a Merkle root.
-2. **AI layer** — anomaly detection + physical plausibility checks; verification-readiness score; cited RAG assistant over official CBAM / TR-ETS texts.
-3. **Verifier attestation** — hybrid ECDSA + ML-DSA (post-quantum) signature; hash anchored on-chain.
+2. **AI layer** — anomaly detection + physical plausibility checks; verification-readiness score. *(Planned: cited RAG assistant over official CBAM / TR-ETS texts — not yet implemented.)*
+3. **Verifier attestation** — hash of the verifier's integrity report anchored on-chain. *(Planned: hybrid ECDSA + ML-DSA post-quantum signature — not yet implemented.)*
 4. **Smart contracts** — this repository's `contracts/`.
 5. **Dashboard** — default-value vs. verified CBAM cost per shipment.
 
