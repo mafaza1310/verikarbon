@@ -3,6 +3,7 @@
 **Tamper-evident embedded-emissions passports and once-only carbon-price deductions for CBAM exporters.**
 
 Track: **Carbon Markets & Emissions Transparency** — IEEE ClimateChain Global Hackathon 2026
+
 **Live dashboard:** https://verikarbon.streamlit.app  ·  **Video:** (link coming)
 
 > Status: smart-contract core deployed on Sepolia; AI integrity layer and dashboard complete.
